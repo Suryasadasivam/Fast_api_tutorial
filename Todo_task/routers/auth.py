@@ -12,12 +12,16 @@ from datetime import timedelta,datetime,timezone
 
 
 
-router=APIRouter()
+router=APIRouter(
+    perfix='/auth',
+    tags=['auth']
+)
+
 SECRET_KEY= '5860762474adae5c17fff27201b6be9cbae43bf94ed59216cac4132e181a0094'
 AlGORITHM="HS256"
 
 bcrypt_context=CryptContext(schemes=['bcrypt'],deprecated='auto')
-oauth2_bearer=OAuth2PasswordBearer(tokenUrl="token")
+oauth2_bearer=OAuth2PasswordBearer(tokenUrl="auth/token")
 
 
 
@@ -71,7 +75,7 @@ async def get_current_user(token:Annotated[str,Depends(oauth2_bearer)]):
 
 
 
-@router.post("/auth",status_code=status.HTTP_201_CREATED)
+@router.post("/",status_code=status.HTTP_201_CREATED)
 async def create_user(db:db_dependency,create_user_request:CreateUserRequest):
     create_user_model=Users(
         username=create_user_request.username,
